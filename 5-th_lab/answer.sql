@@ -88,3 +88,37 @@ FROM sys.sql_dependencies
 WHERE OBJECT_NAME(referenced_major_id) = 'games';
 
 -- индексяшки 
+DECLARE @StartTime1 DATETIME;
+DECLARE @EndTime1 DATETIME;
+
+SET @StartTime1 = GETDATE();
+SELECT *
+FROM dbo.recent_games_view
+WHERE game_date >= DATEADD(day, -7, GETDATE());
+SET @EndTime1 = GETDATE();
+
+SELECT DATEDIFF(ms, @StartTime1, @EndTime1) AS TimeInMilliseconds;
+
+-- тя же ло
+DROP VIEW IF EXISTS indexed_recent_games_view;
+
+CREATE VIEW dbo.indexed_recent_games_view
+WITH SCHEMABINDING
+AS
+SELECT game_date, game_place
+FROM dbo.games
+WHERE game_date >=  CONVERT(DATETIME, '2024-04-26 14:30:00', 120);
+
+CREATE UNIQUE CLUSTERED INDEX IX_indexed_recent_games_view_game_date ON dbo.indexed_recent_games_view (game_date);
+
+
+DECLARE @StartTime1 DATETIME;
+DECLARE @EndTime1 DATETIME;
+
+SET @StartTime1 = GETDATE();
+SELECT *
+FROM dbo.indexed_recent_games_view
+WHERE game_date >= DATEADD(day, -7, GETDATE());
+SET @EndTime1 = GETDATE();
+
+SELECT DATEDIFF(ms, @StartTime1, @EndTime1) AS TimeInMilliseconds;

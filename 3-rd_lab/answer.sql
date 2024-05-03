@@ -1,7 +1,7 @@
-DECLARE @XML AS XML
-SELECT @XML = PlayerXMLColumn FROM player
 
-SELECT @XML.query('/Players/Player') AS PlayerData
+
+SELECT PlayerXMLColumn.query('/Players/Player') AS PlayerData
+FROM player;
 
 SELECT 
     PlayerXMLColumn.value('(Players/Player/id_player)[1]', 'BIGINT') AS id_player,
@@ -20,17 +20,24 @@ SELECT
     username,
     PlayerXMLColumn.exist('/Players/Player[team_id[text()]]') AS team_id_exists
 FROM player;
+select * from player
+DECLARE @playerId BIGINT = 5 
 
-DECLARE @playerId BIGINT = 1;
 UPDATE player
 SET PlayerXMLColumn.modify('
     insert <team_id>6</team_id> as last into (/Players/Player[id_player/text()=sql:variable("@playerId")])[1]'
 )
 WHERE id_player = @playerId;
 
+DECLARE @playerId BIGINT = 5
+
+UPDATE player
+SET PlayerXMLColumn.modify('
+    delete /Players/Player[id_player/text()=sql:variable("@playerId")]/team_id[1]')
+WHERE id_player = @playerId;
 
 SELECT
     PlayerData.value('(id_player)[1]', 'BIGINT') AS id_player,
     PlayerData.value('(name_player)[1]', 'VARCHAR(MAX)') AS name_player
-FROM dbo.player
+FROM player
 CROSS APPLY PlayerXMLColumn.nodes('/Players/Player[name_player/text()="John Doe"]') AS PlayerNode(PlayerData);

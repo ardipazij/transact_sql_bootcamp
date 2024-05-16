@@ -1,3 +1,20 @@
+------------------------- хранимые процедуры ------------------------------
+
+-- Хранимая процедура - именованная коллекция операторов Transact-SQL, которая хранится на
+-- сервере непосредственно в базе данных. Хранимые процедуры – это метод инкапсулирования
+-- повторяющихся задач; они поддерживают пользовательские переменные, условные
+-- операторы и другие возможности программирования.
+
+-- Хранимые процедуры предлагают многочисленные преимущества перед выполнением запросов Transact-SQL. Они могут:
+----- 1. Инкапсулировать прикладные функциональные возможности и создавать прикладную логику многократного использования.
+----- 2. Оградить пользователей от деталей организации таблиц в базе данных. 
+----- 3. Обеспечить механизмы безопасности. 
+----- 4. Улучшить производительность. 
+----- 5. Уменьшить сетевой трафик.
+
+
+-- непараметризованные хранимые процедуры
+
 CREATE PROCEDURE dbo.SelectAllPlayers
 AS
 BEGIN
@@ -16,7 +33,7 @@ EXEC dbo.SelectAllPlayers;
 
 DROP PROCEDURE dbo.SelectAllPlayers;
 
--- параметризированная ерунда
+-- параметризированные хранимые процедуры
 
 CREATE PROCEDURE dbo.GetPlayerById
     @id_player BIGINT
@@ -37,6 +54,8 @@ BEGIN
 END;
 
 EXEC dbo.GetPlayerById @id_game = 1;
+-- или
+EXEC dbo.GetPlayerById 1;
 
 DROP PROCEDURE dbo.GetPlayerById;
 
@@ -82,7 +101,7 @@ SELECT @playerCount;
 DROP PROCEDURE dbo.GetPlayerNameById;
 DROP PROCEDURE dbo.GetPlayerCount;
 
--- функции
+------------------------------функции ----------------------------------------
 
 --скалярная функция
 CREATE FUNCTION dbo.GetPlayerNameById
@@ -107,7 +126,9 @@ SELECT @playerName = dbo.GetPlayerNameById(1);
 
 SELECT @playerName;
 
--- подставляемая таблицаautorisation
+DROP FUNCTION dbo.GetPlayerNameById;
+
+-- подставляемая функция
 
 CREATE FUNCTION dbo.GetPlayersByTeam
 (
@@ -122,6 +143,9 @@ RETURN (
 );
 
 SELECT * FROM dbo.GetPlayersByTeam('Team Alpha');
+
+DROP FUNCTION dbo.GetPlayersByTeam;
+
 
 --многооператорная табличная функция
 
@@ -146,5 +170,3 @@ END;
 SELECT * FROM dbo.GetPlayersWithStats();
 
 DROP FUNCTION dbo.GetPlayersWithStats;
-DROP FUNCtiON dbo.GetPlayerNameById;
-DROP FUNCTION dbo.GetPlayersByTeam;

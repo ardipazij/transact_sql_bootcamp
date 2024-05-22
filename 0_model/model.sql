@@ -1,8 +1,6 @@
-CREATE DATABASE SoccerDB;
-GO
+-- CREATE DATABASE SoccerDB;
 
-USE SoccerDB;
-GO
+-- USE SoccerDB;
 
 CREATE TABLE dbo.games (
     id_game BIGINT IDENTITY(1,1),
@@ -10,7 +8,6 @@ CREATE TABLE dbo.games (
     game_date DATETIME NOT NULL,
     CONSTRAINT games_pkey PRIMARY KEY (id_game)
 );
-GO
 
 CREATE TABLE dbo.player (
     id_player BIGINT IDENTITY(1,1),
@@ -25,7 +22,6 @@ CREATE TABLE dbo.player (
     CONSTRAINT player_pkey PRIMARY KEY (id_player),
     CONSTRAINT player_username_key UNIQUE (username)
 );
-GO
 
 CREATE TABLE dbo.autorisation (
     id_player BIGINT IDENTITY(1,1),
@@ -35,7 +31,6 @@ CREATE TABLE dbo.autorisation (
     CONSTRAINT autorisation_id_player_fkey FOREIGN KEY (id_player) REFERENCES dbo.player (id_player) ON UPDATE NO ACTION ON DELETE NO ACTION,
     CONSTRAINT autorisation_username_fkey FOREIGN KEY (username) REFERENCES dbo.player (username) ON UPDATE CASCADE ON DELETE CASCADE
 );
-GO
 
 CREATE TABLE dbo.statistic (
     id_person BIGINT IDENTITY(1,1),
@@ -52,7 +47,6 @@ CREATE TABLE dbo.statistic (
     CONSTRAINT statistic_pkey PRIMARY KEY (id_person),
     CONSTRAINT statistic_id_person_fkey FOREIGN KEY (id_person) REFERENCES dbo.player (id_player) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
-GO
 
 CREATE TABLE dbo.team (
     id_team BIGINT IDENTITY(1,1),
@@ -63,7 +57,6 @@ CREATE TABLE dbo.team (
     CONSTRAINT team_pkey PRIMARY KEY (id_team),
     CONSTRAINT team_name_team_key UNIQUE (name_team)
 );
-GO
 
 CREATE TABLE dbo.team_games (
     id_game BIGINT IDENTITY(1,1),
@@ -76,7 +69,6 @@ CREATE TABLE dbo.team_games (
     CONSTRAINT team_games_id_team_2_fkey FOREIGN KEY (id_team_2) REFERENCES dbo.team (id_team),
     CONSTRAINT team_games_winner_team_fkey FOREIGN KEY (winner_team) REFERENCES dbo.team (id_team)
 );
-GO
 
 CREATE TABLE dbo.team_player (
     id_team BIGINT NOT NULL,
@@ -86,7 +78,6 @@ CREATE TABLE dbo.team_player (
     CONSTRAINT team_player_pkey PRIMARY KEY (id),
     CONSTRAINT team_player_id_player_fkey FOREIGN KEY (id_player) REFERENCES dbo.player (id_player) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
-GO
 
 INSERT INTO dbo.games (game_place, game_date)
 VALUES 
@@ -95,7 +86,6 @@ VALUES
     ('Indoor Arena', '2024-04-12T19:00:00'),
     ('Stadium C', '2024-04-14T16:45:00'),
     ('Field D', '2024-04-16T13:15:00');
-GO
 
 INSERT INTO dbo.team (name_team)
 VALUES 
@@ -104,7 +94,6 @@ VALUES
     ('Team Gamma'),
     ('Team Delta'),
     ('Team Epsilon');
-GO
 
 INSERT INTO dbo.player (name_player, player_birthdate, phone_player, password, player_position, username, team_name)
 VALUES 
@@ -113,11 +102,9 @@ VALUES
     ('Mike Ross', '1992-03-03', '3456789012', 'pass345', 3, 'mikeross', 'Team Gamma'),
     ('Emma Watson', '1993-04-04', '4567890123', 'pass456', 4, 'emmawatson', 'Team Delta'),
     ('Chris Evans', '1994-05-05', '5678901234', 'pass567', 5, 'chrisevans', 'Team Epsilon');
-GO
 
 INSERT INTO dbo.autorisation (username, password)
 SELECT username, password FROM dbo.player;
-GO
 
 INSERT INTO dbo.team_player (id_team, id_player, player_position)
 VALUES 
@@ -126,7 +113,6 @@ VALUES
     (3, 3, 3),
     (4, 4, 4),
     (5, 5, 5);
-GO
 
 INSERT INTO dbo.statistic ( goals_aim, goals_current, pass_aim, pass_current, power_aim, power_current, catching_aim, catching_current, team_points_aim, team_points_current)
 VALUES
@@ -135,7 +121,6 @@ VALUES
 ('7', '4', '11', '7', '190', '140', '16', '12', '33', '23'),
 ('6', '5', '13', '8', '200', '145', '17', '13', '34', '24'),
 ('9', '6', '14', '9', '210', '155', '19', '14', '35', '25');
-GO
 
 INSERT INTO dbo.team_games ( id_team_1, id_team_2, winner_team)
 VALUES
@@ -144,4 +129,3 @@ VALUES
 (2, 3, 2),
 (1, 4, 4),
 (2, 4, 2);
-GO
